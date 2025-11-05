@@ -1,0 +1,48 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type AuthResponse {
+  accessToken: String!
+}
+
+type MessageResponse {
+  message: String!
+}
+
+type Mutation {
+  confirmEmail(token: String!): MessageResponse!
+  confirmEmailUpdate(token: String!): MessageResponse!
+  deleteAccount(password: String!): MessageResponse!
+  login(email: String!, password: String!): AuthResponse!
+  register(email: String!, name: String!, password: String!): MessageResponse!
+  requestEmailUpdate(newEmail: String!, password: String!): MessageResponse!
+  requestPasswordReset(email: String!): MessageResponse!
+  requestUnlock(email: String!): MessageResponse!
+  resetPassword(newPassword: String!, token: String!): MessageResponse!
+  resetPasswordAfterRevert(newPassword: String!, token: String!): MessageResponse!
+  revertEmail(token: String!): RevertEmailResponse!
+  unlockAccount(token: String!): MessageResponse!
+  updatePassword(currentPassword: String!, newPassword: String!): MessageResponse!
+  updateProfile(name: String!): MessageResponse!
+}
+
+type Query {
+  myProfile: User!
+}
+
+type RevertEmailResponse {
+  resetToken: String!
+}
+
+type User {
+  createdAt: String!
+  email: String!
+  emailChangedAt: String
+  id: Int!
+  isEmailConfirmed: Boolean!
+  isLocked: Boolean!
+  name: String!
+  newEmail: String
+  oldEmail: String
+}

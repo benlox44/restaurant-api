@@ -1,0 +1,52 @@
+type User {
+  id: Int!
+  name: String!
+  email: String!
+  isLocked: Boolean!
+  isEmailConfirmed: Boolean!
+  createdAt: String!
+  oldEmail: String
+  newEmail: String
+  emailChangedAt: String
+}
+
+type AuthResponse {
+  accessToken: String!
+}
+
+type MessageResponse {
+  message: String!
+}
+
+type RevertEmailResponse {
+  resetToken: String!
+}
+
+type Query {
+  # Get current user profile
+  myProfile: User!
+}
+
+type Mutation {
+  # Authentication
+  register(email: String!, password: String!, name: String!): MessageResponse!
+  login(email: String!, password: String!): AuthResponse!
+  
+  # Password management
+  requestPasswordReset(email: String!): MessageResponse!
+  resetPassword(token: String!, newPassword: String!): MessageResponse!
+  resetPasswordAfterRevert(token: String!, newPassword: String!): MessageResponse!
+  updatePassword(currentPassword: String!, newPassword: String!): MessageResponse!
+  
+  # Account management
+  requestUnlock(email: String!): MessageResponse!
+  confirmEmail(token: String!): MessageResponse!
+  confirmEmailUpdate(token: String!): MessageResponse!
+  revertEmail(token: String!): RevertEmailResponse!
+  unlockAccount(token: String!): MessageResponse!
+  
+  # Profile management
+  updateProfile(name: String!): MessageResponse!
+  requestEmailUpdate(password: String!, newEmail: String!): MessageResponse!
+  deleteAccount(password: String!): MessageResponse!
+}
