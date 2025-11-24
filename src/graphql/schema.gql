@@ -22,9 +22,62 @@ type RevertEmailResponse {
   resetToken: String!
 }
 
+# ===== Menu Types =====
+type MenuItem {
+  id: String!
+  name: String!
+  description: String!
+  price: Float!
+  category: String!
+}
+
+type CreateMenuResponse {
+  id: String!
+  item: MenuItem!
+}
+
+# ===== Order Types =====
+type OrderItem {
+  menuItemId: String!
+  name: String!
+  quantity: Int!
+  price: Float!
+}
+
+type Order {
+  id: String!
+  items: [OrderItem!]!
+  total: Float!
+  status: String!
+  createdAt: Int!
+}
+
+type CreateOrderResponse {
+  id: String!
+  order: Order!
+}
+
+type OperationResponse {
+  ok: Boolean!
+}
+
+# ===== Input Types =====
+input CreateOrderItemInput {
+  menuItemId: String!
+  name: String!
+  quantity: Int!
+  price: Float!
+}
+
 type Query {
   # Get current user profile
   myProfile: User!
+  
+  # Menu queries
+  menu: [MenuItem!]!
+  
+  # Order queries
+  orders: [Order!]!
 }
 
 type Mutation {
@@ -49,4 +102,14 @@ type Mutation {
   updateProfile(name: String!): MessageResponse!
   requestEmailUpdate(password: String!, newEmail: String!): MessageResponse!
   deleteAccount(password: String!): MessageResponse!
+  
+  # Menu mutations
+  createMenuItem(name: String!, description: String!, price: Float!, category: String!): CreateMenuResponse!
+  updateMenuItem(id: String!, name: String, description: String, price: Float, category: String): OperationResponse!
+  deleteMenuItem(id: String!): OperationResponse!
+  
+  # Order mutations
+  createOrder(items: [CreateOrderItemInput!]!): CreateOrderResponse!
+  updateOrderStatus(id: String!, status: String!): OperationResponse!
+  deleteOrder(id: String!): OperationResponse!
 }

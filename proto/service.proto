@@ -1,0 +1,112 @@
+syntax = "proto3";
+
+package restaurant;
+
+option go_package = "github.com/winteroh/restaurant-orders/proto;proto";
+
+// --- Menu messages ---
+message MenuItem {
+  // Mongo ObjectID will be passed as its hex string representation
+  string id = 1;
+  string name = 2;
+  string description = 3;
+  double price = 4;
+  string category = 5;
+}
+
+message CreateMenuRequest {
+  MenuItem item = 1; // id is ignored on create
+}
+
+message CreateMenuResponse {
+  string id = 1;
+  MenuItem item = 2;
+}
+
+message ListMenuRequest {}
+
+message ListMenuResponse {
+  repeated MenuItem items = 1;
+}
+
+message UpdateMenuRequest {
+  string id = 1;
+  MenuItem item = 2; // fields provided will be used to $set
+}
+
+message UpdateMenuResponse {
+  bool ok = 1;
+}
+
+message DeleteMenuRequest {
+  string id = 1;
+}
+
+message DeleteMenuResponse {
+  bool ok = 1;
+}
+
+// --- Order messages ---
+message OrderItem {
+  // Reference to MenuItem ID (hex string)
+  string menu_item_id = 1;
+  string name = 2; // denormalized at order creation
+  int32 quantity = 3;
+  double price = 4; // unit price at the time of order
+}
+
+message Order {
+  string id = 1;
+  repeated OrderItem items = 2;
+  double total = 3;
+  string status = 4;
+  int64 created_at = 5; // unix seconds
+}
+
+message CreateOrderRequest {
+  repeated OrderItem items = 1; // client supplies menu_item_id and quantity
+}
+
+message CreateOrderResponse {
+  string id = 1;
+  Order order = 2;
+}
+
+message ListOrdersRequest {}
+
+message ListOrdersResponse {
+  repeated Order orders = 1;
+}
+
+message UpdateOrderRequest {
+  string id = 1;
+  // For now we only allow updating the status; other fields could be added later
+  string status = 2;
+}
+
+message UpdateOrderResponse {
+  bool ok = 1;
+}
+
+message DeleteOrderRequest {
+  string id = 1;
+}
+
+message DeleteOrderResponse {
+  bool ok = 1;
+}
+
+// --- Services ---
+service MenuService {
+  rpc CreateMenuItem(CreateMenuRequest) returns (CreateMenuResponse);
+  rpc ListMenu(ListMenuRequest) returns (ListMenuResponse);
+  rpc UpdateMenuItem(UpdateMenuRequest) returns (UpdateMenuResponse);
+  rpc DeleteMenuItem(DeleteMenuRequest) returns (DeleteMenuResponse);
+}
+
+service OrderService {
+  rpc CreateOrder(CreateOrderRequest) returns (CreateOrderResponse);
+  rpc ListOrders(ListOrdersRequest) returns (ListOrdersResponse);
+  rpc UpdateOrder(UpdateOrderRequest) returns (UpdateOrderResponse);
+  rpc DeleteOrder(DeleteOrderRequest) returns (DeleteOrderResponse);
+}
